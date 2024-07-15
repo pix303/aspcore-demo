@@ -46,9 +46,9 @@ namespace RestApiApp.Services
 			{
 				return Ok(result);
 			}
-			return NotFound($"No result with search criteria content={content ?? ""} && priority={priority ?? -1}");
+			var priorityErrMsg = (priority ?? 0) == 0 ? "undefined" : priority.ToString();
+			return NotFound($"No result with search criteria content={content ?? ""} && priority={priorityErrMsg}");
+
 		}
-
-
 	}
 }
