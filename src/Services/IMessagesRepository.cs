@@ -9,5 +9,6 @@ namespace RestApiApp.Services
 		bool Delete(Message message);
 		Task<IEnumerable<Message>> GetByContent(string content);
 		Task<IEnumerable<Message>> GetByPriority(int priority);
+		Task<IEnumerable<Message>> GetByContentAndPriority(string content, int priority);
 	}
 }

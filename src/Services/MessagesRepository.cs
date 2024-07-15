@@ -46,6 +46,18 @@ namespace RestApiApp.Services
 			return Enumerable.Empty<Message>();
 		}
 
+		public async Task<IEnumerable<Message>> GetByContentAndPriority(string content, int priority)
+		{
+			if (_appDBContext.Messages is not null)
+			{
+				return await _appDBContext.Messages
+				.Where(m => m.PriorityId.Equals(priority))
+				.Where(m => m.Content.Contains(content))
+				.ToListAsync();
+			}
+
+			return Enumerable.Empty<Message>();
+		}
 	}
 
 

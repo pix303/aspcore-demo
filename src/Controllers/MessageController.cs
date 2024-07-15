@@ -39,10 +39,7 @@ namespace RestApiApp.Services
 			}
 			else if (content is not null && priority is not null)
 			{
-				var priorityResult = await _repository.GetByPriority((int)priority);
-				result = priorityResult
-				.Where(m => m.Content.Contains(content))
-				.ToList();
+				result = await _repository.GetByContentAndPriority(content, (int)priority);
 			}
 
 			if (result.Count() > 0)
