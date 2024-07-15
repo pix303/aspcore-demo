@@ -6,33 +6,26 @@ namespace RestApiApp.Services
 	public class AppDBContext : DbContext
 	{
 
-		public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
-		{
+		public virtual DbSet<Message> Messages { get; set; } = null!;
+		public virtual DbSet<Priority> Priorities { get; set; } = null!;
 
-		}
-
-		public virtual DbSet<Message>? Messages { get; set; }
-		public virtual DbSet<Priority>? Priority { get; set; }
+		public AppDBContext(DbContextOptions<AppDBContext> options) : base(options) { }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
-			modelBuilder.Entity<Message>()
-			.HasKey(rm => rm.Id);
 
 			modelBuilder.Entity<Message>()
-			.HasOne<Priority>(rm => rm.Priority)
+			.HasKey(m => m.Id);
+
+			modelBuilder.Entity<Message>()
+			.HasOne<Priority>(m => m.Priority)
 			.WithMany(p => p.Messages)
-			.HasForeignKey(p => p.PriorityId);
+			.HasForeignKey(m => m.PriorityId)
+			.HasPrincipalKey(p => p.Id);
 
 			modelBuilder.Entity<Priority>()
-			.HasKey(priority => new { priority.Id });
-
-			modelBuilder.Entity<Priority>()
-			.HasMany<Message>(p => p.Messages)
-			.WithOne(rm => rm.Priority);
-
-
+			.HasKey(m => m.Id);
 		}
 	}
 

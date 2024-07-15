@@ -13,11 +13,18 @@ namespace RestApiApp.Models
 		[Column("description")]
 		public string Description { get; set; }
 
-		public virtual ICollection<Message>? Messages { get; set; }
+		public virtual ICollection<Message> Messages { get; set; } = null!;
 
 		public Priority(string description)
 		{
 			Description = description;
 		}
+	}
+
+
+	public class PriorityDto
+	{
+		public Int32 Id { get; set; }
+		public string Description { get; set; } = "";
 	}
 }

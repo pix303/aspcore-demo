@@ -28,35 +28,27 @@ namespace RestApiApp.Services
 
 		public async Task<IEnumerable<Message>> GetByContent(string content)
 		{
-			if (_appDBContext.Messages is not null)
-			{
-				return await _appDBContext.Messages.Where(m => m.Content.Contains(content)).ToListAsync();
-			}
-
-			return Enumerable.Empty<Message>();
+			return await _appDBContext.Messages
+			.Where(m => m.Content.Contains(content))
+			.Include(m => m.Priority)
+			.ToListAsync();
 		}
 
 		public async Task<IEnumerable<Message>> GetByPriority(int priority)
 		{
-			if (_appDBContext.Messages is not null)
-			{
-				return await _appDBContext.Messages.Where(m => m.PriorityId.Equals(priority)).ToListAsync();
-			}
-
-			return Enumerable.Empty<Message>();
+			return await _appDBContext.Messages
+			.Where(m => m.PriorityId.Equals(priority))
+			.Include(m => m.Priority)
+			.ToListAsync();
 		}
 
 		public async Task<IEnumerable<Message>> GetByContentAndPriority(string content, int priority)
 		{
-			if (_appDBContext.Messages is not null)
-			{
-				return await _appDBContext.Messages
-				.Where(m => m.PriorityId.Equals(priority))
-				.Where(m => m.Content.Contains(content))
-				.ToListAsync();
-			}
-
-			return Enumerable.Empty<Message>();
+			return await _appDBContext.Messages
+			.Where(m => m.PriorityId.Equals(priority))
+			.Where(m => m.Content.Contains(content))
+			.Include(m => m.Priority)
+			.ToListAsync();
 		}
 	}
 

@@ -23,17 +23,23 @@ namespace RestApiApp.Models
 			set { _content = value; }
 		}
 
-
 		[Range(0, 5, ErrorMessage = "possible value 1,2,3,4,5")]
 		[Column("priority_id")]
 		public int PriorityId { get; set; }
-
 		public virtual Priority? Priority { get; set; }
+
 
 		public Message(string content, int priorityId)
 		{
 			PriorityId = priorityId;
 			Content = content;
 		}
+	}
+
+	public class MessageDto
+	{
+		public Int32 Id { get; set; }
+		public string Content { get; set; } = "";
+		public virtual PriorityDto? Priority { get; set; }
 	}
 }

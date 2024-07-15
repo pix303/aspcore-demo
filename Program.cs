@@ -9,6 +9,7 @@ builder.Services.AddDbContext<AppDBContext>(options => options.UseNpgsql(dbConne
 
 // every http request repository is istantiated by this macht rule
 builder.Services.AddScoped<IMessagesRepository, MessagesRepository>();
+builder.Services.AddScoped<IPrioritiesRepository, PrioritiesRepository>();
 
 // scan attributes, class names to use as controller
 builder.Services.AddControllers();

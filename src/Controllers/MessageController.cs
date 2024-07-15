@@ -20,10 +20,11 @@ namespace RestApiApp.Services
 		[ProducesResponseType(400)]
 		[ProducesResponseType(404)]
 		[ProducesResponseType(500)]
-		[ProducesResponseType(200, Type = typeof(IEnumerable<Message>))]
+		[ProducesResponseType(200, Type = typeof(IEnumerable<MessageDto>))]
 		public async Task<IActionResult> Find(string? content, int? priority)
 		{
-			IEnumerable<Message> result = new List<Message>();
+			var resultDto = new List<MessageDto>();
+			IEnumerable<Message> tempResult = new List<Message>();
 
 			if (priority is null && content is null)
 			{
@@ -31,21 +32,36 @@ namespace RestApiApp.Services
 			}
 			else if (priority is null && content is string)
 			{
-				result = await _repository.GetByContent(content);
+				tempResult = await _repository.GetByContent(content);
 			}
 			else if (content is null && priority is int)
 			{
-				result = await _repository.GetByPriority((int)priority);
+				tempResult = await _repository.GetByPriority((int)priority);
 			}
 			else if (content is not null && priority is not null)
 			{
-				result = await _repository.GetByContentAndPriority(content, (int)priority);
+				tempResult = await _repository.GetByContentAndPriority(content, (int)priority);
 			}
 
-			if (result.Count() > 0)
+			if (tempResult.Count() > 0)
 			{
-				return Ok(result);
+				foreach (var msg in tempResult)
+				{
+					MessageDto mdto = new MessageDto
+					{
+						Content = msg.Content,
+						Id = msg.Id,
+						Priority = msg.Priority is not null ? new PriorityDto
+						{
+							Id = msg.Priority!.Id,
+							Description = msg.Priority.Description,
+						} : null,
+					};
+					resultDto.Add(mdto);
+				}
+				return Ok(resultDto);
 			}
+
 			var priorityErrMsg = (priority ?? 0) == 0 ? "undefined" : priority.ToString();
 			return NotFound($"No result with search criteria content={content ?? ""} && priority={priorityErrMsg}");
 
